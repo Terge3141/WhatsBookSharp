@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhatsBookSharp", "WhatsBookSharp\WhatsBookSharp.csproj", "{6DA10320-C069-4138-8B7A-0E11BDCFA087}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helper", "Helper\Helper.csproj", "{B2E14445-015F-40FE-A088-A11AE49F5AB6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelperTest", "HelperTest\HelperTest.csproj", "{3BE20AF0-84F6-430E-B759-1F99BABBC919}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageParser", "MessageParser\MessageParser.csproj", "{5E62C8EB-3E65-436A-9E86-8E3C1A1FE9D5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3BE20AF0-84F6-430E-B759-1F99BABBC919}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3BE20AF0-84F6-430E-B759-1F99BABBC919}.Debug|x86.Build.0 = Debug|Any CPU
+		{3BE20AF0-84F6-430E-B759-1F99BABBC919}.Release|x86.ActiveCfg = Release|Any CPU
+		{3BE20AF0-84F6-430E-B759-1F99BABBC919}.Release|x86.Build.0 = Release|Any CPU
+		{5E62C8EB-3E65-436A-9E86-8E3C1A1FE9D5}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5E62C8EB-3E65-436A-9E86-8E3C1A1FE9D5}.Debug|x86.Build.0 = Debug|Any CPU
+		{5E62C8EB-3E65-436A-9E86-8E3C1A1FE9D5}.Release|x86.ActiveCfg = Release|Any CPU
+		{5E62C8EB-3E65-436A-9E86-8E3C1A1FE9D5}.Release|x86.Build.0 = Release|Any CPU
+		{6DA10320-C069-4138-8B7A-0E11BDCFA087}.Debug|x86.ActiveCfg = Debug|x86
+		{6DA10320-C069-4138-8B7A-0E11BDCFA087}.Debug|x86.Build.0 = Debug|x86
+		{6DA10320-C069-4138-8B7A-0E11BDCFA087}.Release|x86.ActiveCfg = Release|x86
+		{6DA10320-C069-4138-8B7A-0E11BDCFA087}.Release|x86.Build.0 = Release|x86
+		{B2E14445-015F-40FE-A088-A11AE49F5AB6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B2E14445-015F-40FE-A088-A11AE49F5AB6}.Debug|x86.Build.0 = Debug|Any CPU
+		{B2E14445-015F-40FE-A088-A11AE49F5AB6}.Release|x86.ActiveCfg = Release|Any CPU
+		{B2E14445-015F-40FE-A088-A11AE49F5AB6}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
