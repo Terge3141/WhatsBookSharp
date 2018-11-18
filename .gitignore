@@ -4,3 +4,5 @@ obj
 packages
 *.Cache
 .~*
+.*.swp
+README.html

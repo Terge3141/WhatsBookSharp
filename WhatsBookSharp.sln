@@ -9,6 +9,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelperTest", "HelperTest\He
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageParser", "MessageParser\MessageParser.csproj", "{5E62C8EB-3E65-436A-9E86-8E3C1A1FE9D5}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C61FA958-2356-4A81-BCBB-B1DCE54AD1C9}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -31,5 +36,7 @@ Global
 		{B2E14445-015F-40FE-A088-A11AE49F5AB6}.Debug|x86.Build.0 = Debug|Any CPU
 		{B2E14445-015F-40FE-A088-A11AE49F5AB6}.Release|x86.ActiveCfg = Release|Any CPU
 		{B2E14445-015F-40FE-A088-A11AE49F5AB6}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
 EndGlobal
