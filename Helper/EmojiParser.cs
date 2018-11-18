@@ -13,7 +13,7 @@ namespace Helper
             set;
         }
 
-        public string Format
+        public Func<string, string> FormatFunction
         {
             get;
             set;
@@ -27,19 +27,21 @@ namespace Helper
 
         private int _tokenMax = 0;
 
+        private readonly char SEPERATOR = '_';
+
         /// <summary>
         /// Initializes a new instance of the <see cref="EmojiParser.Parser"/> class.
         /// </summary>
         /// <param name="emojiList">List of known emojis</param>
-        /// <param name="format">Format if emoji found, should contain {0}</param>
-        public EmojiParser(List<string> emojiList, string format)
+        /// <param name="formatFunction">FormatFunction, input hex values, output include graphics command</param>
+        public EmojiParser(List<string> emojiList, Func<string,string> formatFunction)
         {
             EmojiList = emojiList;
-            Format = format;
+            FormatFunction = formatFunction;
 
             foreach (var x in EmojiList)
             {
-                _tokenMax = Math.Max(_tokenMax, x.Split('-').Length);
+                _tokenMax = Math.Max(_tokenMax, x.Split(SEPERATOR).Length);
             }
 
             _tokenMax++;
@@ -77,7 +79,7 @@ namespace Helper
             var suggestion = strHex;
             if (last != null)
             {
-                suggestion = last + "-" + suggestion;
+                suggestion = last + SEPERATOR + suggestion;
             }
 
             int result = ParseQuadruple(utf32, index + 4, sb, suggestion, cnt + 1);
@@ -85,7 +87,7 @@ namespace Helper
             {
                 if (EmojiList.Contains(suggestion))
                 {
-                    sb.Append(string.Format(Format, suggestion));
+                    sb.Append(FormatFunction(suggestion));
                     return index + 4;
                 }
                 else
@@ -100,7 +102,7 @@ namespace Helper
                         {
                             if (EmojiList.Contains(alternative))
                             {
-                                replacement = string.Format(Format, alternative);
+                                replacement = FormatFunction(alternative);
                             }
                         }
 
@@ -126,7 +128,7 @@ namespace Helper
         private string Convert(byte[] arr)
         {
             arr = Invert(arr);
-            var result = BitConverter.ToString(arr).Replace("-", "").TrimStart('0');
+            var result = BitConverter.ToString(arr).Replace("-", "").TrimStart('0').ToLower();
 
             // if result has less than 4 characters add leading zeros
             while (result.Length < 4)

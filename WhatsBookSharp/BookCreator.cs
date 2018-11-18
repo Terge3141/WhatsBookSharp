@@ -5,14 +5,19 @@ using Helper;
 using MessageParser;
 using System.Text;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace WhatsBookSharp
 {
     public class BookCreator
     {
+        private List<Tuple<string, string>> _copyList;
+        private string _emojiInputDir;
         private EmojiParser _emojis;
         private string _header;
         private string _footer;
+
+        private readonly string EMOJIPREFIX = "emoji_u";
 
         private static string[] _months = new string[]
         {
@@ -45,6 +50,17 @@ namespace WhatsBookSharp
         /// </summary>
         /// <value>The output dir.</value>
         public string OutputDir
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the emoji output dir. This is the directory where the used written emojis are written to.
+        /// Default is OutputDir/emojis
+        /// </summary>
+        /// <value>The emoji output dir.</value>
+        public string EmojiOutputDir
         {
             get;
             set;
@@ -96,25 +112,32 @@ namespace WhatsBookSharp
             set;
         }
 
-        public BookCreator(string inputDir, string outputDir, string emojiDir)
+        public BookCreator(string inputDir, string outputDir, string emojiInputDir)
         {
-            var emojiList = ReadEmojiList(emojiDir);
-            var format = "\\includegraphics[scale=0.15]{{" + emojiDir + "/{0}.png}}";
-            _emojis = new EmojiParser(emojiList, format);
+            var emojiList = ReadEmojiList(emojiInputDir);
+            _emojiInputDir = emojiInputDir;
+
+            _emojis = new EmojiParser(emojiList, x => GetEmojiPath(x));
 
             _header = File.ReadAllText("header.tex.tmpl");
             _footer = File.ReadAllText("footer.tex.tmpl");
 
             InputDir = inputDir;
             OutputDir = outputDir;
+
             ChatDir = Path.Combine(InputDir, "chat");
             ConfigDir = Path.Combine(InputDir, "config");
             ImageDir = ChatDir;
             ImagePoolDir = null;
+
+            EmojiOutputDir = Path.Combine(OutputDir, "emojis");
+            Directory.CreateDirectory(EmojiOutputDir);
         }
 
         public void WriteTex()
         {
+            _copyList = new List<Tuple<string, string>>();
+            
             var txtFiles = Directory.EnumerateFiles(ChatDir, "*.txt");
             if (txtFiles.Count() != 1)
             {
@@ -129,6 +152,7 @@ namespace WhatsBookSharp
             var texOutputPath = Path.Combine(OutputDir, namePrefix + ".tex");
 
             var matchInputPath = Path.Combine(ConfigDir, namePrefix + ".match.xml");
+            var matchOutputPath = Path.Combine(OutputDir, namePrefix + ".match.xml");
             var im = new ImageMatcher();
             if (File.Exists(matchInputPath))
             {
@@ -186,9 +210,22 @@ namespace WhatsBookSharp
 
             sb.AppendLine(_footer);
 
+            Console.WriteLine($"Writing tex file to '{texOutputPath}'");
             File.WriteAllText(texOutputPath, sb.ToString());
-            Console.WriteLine($"Written to '{texOutputPath}'");
-            im.Save(Path.Combine(OutputDir, namePrefix + ".match.xml"));
+
+            Console.WriteLine($"Writing match file to '{matchOutputPath}'");
+            im.Save(matchOutputPath);
+
+            Console.WriteLine($"Copy emojis to '{EmojiOutputDir}'");
+            CopyList();
+        }
+
+        private void CopyList()
+        {
+            foreach (var x in _copyList)
+            {
+                File.Copy(x.Item1, x.Item2, true);
+            }
         }
 
         private static bool TimeDiffer(DateTime date1, DateTime date2)
@@ -295,10 +332,33 @@ namespace WhatsBookSharp
             foreach (var x in Directory.EnumerateFiles(dir))
             {
                 var fileName = Path.GetFileName(x);
-                list.Add(fileName.Substring(0, fileName.Length - 4));
+
+                var regex = new Regex(EMOJIPREFIX);
+                var nr = regex.Replace(fileName, "");
+
+                regex = new Regex(@"\.png");
+                nr = regex.Replace(nr, "");
+                list.Add(nr);
+            }
+
+            // TODO find better solution
+            var excludes = new string []{ "0023", "002a", "0030", "0031", "0032", "0033", "0034", "0035", "0036", "0037", "0038", "0039" };
+            foreach(var x in excludes)
+            {
+                list.Remove(x);
             }
 
             return list;
+        }
+
+        private string GetEmojiPath(string str)
+        {
+            var src = $"{_emojiInputDir}/{EMOJIPREFIX}{str}.png";
+            var dst = $"{EmojiOutputDir}/{str}.png";
+
+            _copyList.Add(new Tuple<string, string>(src, dst));
+
+            return $"\\includegraphics[scale=0.075]{{emojis/{str}.png}}";
         }
     }
 }

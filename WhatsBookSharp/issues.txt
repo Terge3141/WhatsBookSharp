@@ -1,7 +1,4 @@
-﻿Unit tests for ImageMatcher
-Don't print empty messages an IsImage=false
-
-Add Mapping if only phone numbers are available (CH, MB1)
+﻿Add Mapping if only phone numbers are available (CH, MB1)
 
 Some emojis not shown correctly
 - AE, Page 2; AM, Page 2; CK Page 6,8; DD1; FM, Page 1; KH, Page2; LL; MB2, Page2; MH Page1

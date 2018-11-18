@@ -12,8 +12,8 @@ namespace HelperTest
         public void TestReplaceEmojis_Single_NotInList()
         {
             var list = new List<string>();
-            var parser = new EmojiParser(list, "ICON{0}");
-            var ch = Char.ConvertFromUtf32(0x1F55E);
+            var parser = new EmojiParser(list, x => GetIcon(x));
+            var ch = Char.ConvertFromUtf32(0x1f55e);
             var input = "" + ch;
             var output = parser.ReplaceEmojis(input);
             Assert.AreEqual(input, output);
@@ -22,30 +22,30 @@ namespace HelperTest
         [Test()]
         public void TestReplaceEmojis_Single_InList1()
         {
-            var list = new List<string>() { "1F55E" };
-            var parser = new EmojiParser(list, "ICON{0}");
-            var ch = Char.ConvertFromUtf32(0x1F55E);
+            var list = new List<string>() { "1f55e" };
+            var parser = new EmojiParser(list, x => GetIcon(x));
+            var ch = Char.ConvertFromUtf32(0x1f55e);
             var input = "" + ch;
             var output = parser.ReplaceEmojis(input);
-            Assert.AreEqual("ICON1F55E", output);
+            Assert.AreEqual("ICON(1f55e)", output);
         }
 
         [Test()]
         public void TestReplaceEmojis_Single_InList2()
         {
-            var list = new List<string>(){ "1F4AA", "1F4AA-1F3FB" };
-            var parser = new EmojiParser(list, "ICON{0}");
-            var input = Char.ConvertFromUtf32(0x1F4AA);
+            var list = new List<string>(){ "1f4aa", "1f4aa_1f3fb" };
+            var parser = new EmojiParser(list, x => GetIcon(x));
+            var input = Char.ConvertFromUtf32(0x1f4aa);
             var output = parser.ReplaceEmojis(input);
-            Assert.AreEqual("ICON1F4AA", output);
+            Assert.AreEqual("ICON(1f4aa)", output);
         }
 
         [Test()]
         public void TestReplaceEmojis_Double_NotInList()
         {
             var list = new List<string>();
-            var parser = new EmojiParser(list, "ICON{0}");
-            var input = Char.ConvertFromUtf32(0x1F4A8) + Char.ConvertFromUtf32(0x1F4A9);
+            var parser = new EmojiParser(list, x => GetIcon(x));
+            var input = Char.ConvertFromUtf32(0x1f4a8) + Char.ConvertFromUtf32(0x1f4a9);
             var output = parser.ReplaceEmojis(input);
             Assert.AreEqual(input, output);
         }
@@ -53,28 +53,28 @@ namespace HelperTest
         [Test()]
         public void TestReplaceEmojis_Double_InList1()
         {
-            var list = new List<string>(){ "1F4AA-1F3FB" };
-            var parser = new EmojiParser(list, "ICON{0}");
-            var input = Char.ConvertFromUtf32(0x1F4AA) + Char.ConvertFromUtf32(0x1F3FB);
+            var list = new List<string>(){ "1f4aa_1f3fb" };
+            var parser = new EmojiParser(list, x => GetIcon(x));
+            var input = Char.ConvertFromUtf32(0x1f4aa) + Char.ConvertFromUtf32(0x1f3fb);
             var output = parser.ReplaceEmojis(input);
-            Assert.AreEqual("ICON1F4AA-1F3FB", output);
+            Assert.AreEqual("ICON(1f4aa_1f3fb)", output);
         }
 
         [Test()]
         public void TestReplaceEmojis_Double_InList2()
         {
-            var list = new List<string>(){ "1F4AA", "1F4AA-1F3FB" };
-            var parser = new EmojiParser(list, "ICON{0}");
-            var input = Char.ConvertFromUtf32(0x1F4AA) + Char.ConvertFromUtf32(0x1F3FB);
+            var list = new List<string>(){ "1f4aa", "1f4aa_1f3fb" };
+            var parser = new EmojiParser(list, x => GetIcon(x));
+            var input = Char.ConvertFromUtf32(0x1f4aa) + Char.ConvertFromUtf32(0x1f3fb);
             var output = parser.ReplaceEmojis(input);
-            Assert.AreEqual("ICON1F4AA-1F3FB", output);
+            Assert.AreEqual("ICON(1f4aa_1f3fb)", output);
         }
 
         [Test()]
         public void TestReplaceEmojis_List1()
         {
-            var list = new List<string>(){ "1F4AA" };
-            var parser = new EmojiParser(list, "ICON{0}");
+            var list = new List<string>(){ "1f4aa" };
+            var parser = new EmojiParser(list, x => GetIcon(x));
             var input = "abcde";
             var output = parser.ReplaceEmojis(input);
             Assert.AreEqual(input, output);
@@ -83,22 +83,27 @@ namespace HelperTest
         [Test()]
         public void TestReplaceEmojis_List2()
         {
-            var list = new List<string>() { "1F4AA" };
-            var parser = new EmojiParser(list, "ICON({0})");
-            var input = "abcdef" + Char.ConvertFromUtf32(0x1F4AA) + "GHIJKLM";
+            var list = new List<string>() { "1f4aa" };
+            var parser = new EmojiParser(list, x => GetIcon(x));
+            var input = "abcdef" + Char.ConvertFromUtf32(0x1f4aa) + "GHIJKLM";
             var output = parser.ReplaceEmojis(input);
-            Assert.AreEqual("abcdefICON(1F4AA)GHIJKLM", output);
+            Assert.AreEqual("abcdefICON(1f4aa)GHIJKLM", output);
         }
 
         [Test()]
         public void TestReplaceEmojis_NormalCharAndEmoji()
         {
-            // # and 0x20E3 will result in 0023-20E3 (#=0023)
-            var list = new List<string>(){ "0023-20E3" };
-            var parser = new EmojiParser(list, "ICON({0})");
-            var input = "#" + Char.ConvertFromUtf32(0x20E3);
+            // # and 0x20e3 will result in 0023-20e3 (#=0023)
+            var list = new List<string>(){ "0023_20e3" };
+            var parser = new EmojiParser(list, x => GetIcon(x));
+            var input = "#" + Char.ConvertFromUtf32(0x20e3);
             var output = parser.ReplaceEmojis(input);
-            Assert.AreEqual("ICON(0023-20E3)", output);
+            Assert.AreEqual("ICON(0023_20e3)", output);
+        }
+
+        private string GetIcon(string hex)
+        {
+            return $"ICON({hex})";
         }
     }
 }
