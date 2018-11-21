@@ -37,6 +37,7 @@
     <Compile Include="Latex.cs" />
     <Compile Include="ImageMatcher.cs" />
     <Compile Include="SoftBankConverter.cs" />
+    <Compile Include="Serializer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

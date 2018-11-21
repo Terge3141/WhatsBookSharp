@@ -5,8 +5,21 @@ using Helper;
 
 namespace WhatsBookSharp
 {
-    class MainClass
+    public class MainClass
     {
+        public class Config
+        {
+            public string InputDir { get; set; }
+
+            public string OutputDir { get; set; }
+
+            public string EmojiDir{ get; set; }
+         
+            public string ImagePoolDir{ get; set; }
+
+            public string DebugDir{ get; set; }
+        }
+        
         public class Options
         {
             [Option('i', "inputdir", Required = true, HelpText = "Input directory, should contain a subdirectory 'chat' where conversion and images is stored")]
@@ -27,30 +40,43 @@ namespace WhatsBookSharp
 
         public static void Main(string[] args)
         {
-            Options options = null;
-            Parser.Default.ParseArguments<Options>(args).WithParsed(o => options = o);
-
-            if (options == null)
+            Config config;
+            // use a config file, for debugging purpose
+            if (args[0] == "CONFIGFILE")
             {
-                return;
+                File.WriteAllText("/tmp/sample.xml", Serializer.SerializeToXml<Config>(config));*/
+                config = Serializer.DeserializeFromXml<Config>(File.ReadAllText(args[1]));
+            }
+            else
+            {
+                config = new Config();
+                Options options = null;
+                Parser.Default.ParseArguments<Options>(args).WithParsed(o => options = o);
+
+                if (options == null)
+                {
+                    return;
+                }
+
+                config.InputDir = options.InputDir;
+                config.OutputDir = options.OutputDir;
+                config.EmojiDir = options.EmojiDir;
+                config.ImagePoolDir = options.ImagePoolDir;
+                config.DebugDir = options.DebugDir;
             }
 
-            var inputDir = options.InputDir;
-            var outputDir = (options.OutputDir == null) ? inputDir : options.OutputDir;
-            var emojiDir = options.EmojiDir;
-            var imagePoolDir = options.ImagePoolDir;
+            config.OutputDir = string.IsNullOrWhiteSpace(config.OutputDir) ? config.InputDir : config.OutputDir;
 
-            var debugDir = options.DebugDir;
             StreamWriter writer = null;
-            if (debugDir != null)
+            if (!string.IsNullOrWhiteSpace(config.DebugDir))
             {
-                Directory.CreateDirectory(debugDir);
-                writer = new StreamWriter(Path.Combine(debugDir, "output.log"));
+                Directory.CreateDirectory(config.DebugDir);
+                writer = new StreamWriter(Path.Combine(config.DebugDir, "output.log"));
                 EmojiParser.Debug = writer;
             }
 
-            var creator = new BookCreator(inputDir, outputDir, emojiDir);
-            creator.ImagePoolDir = imagePoolDir;
+            var creator = new BookCreator(config.InputDir, config.OutputDir, config.EmojiDir);
+            creator.ImagePoolDir = config.OutputDir;
             creator.WriteTex();
 
             EmojiParser.Debug = null;

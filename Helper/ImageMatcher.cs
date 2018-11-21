@@ -63,10 +63,7 @@ namespace Helper
 
         public string SaveToString()
         {
-            var sw = new StringWriter();
-            var serializer = new XmlSerializer(typeof(List<MatchEntry>));
-            serializer.Serialize(sw, _matchList);
-            return sw.ToString();
+            return Serializer.SerializeToXml(_matchList);
         }
 
         public void LoadMatches(string path)
@@ -76,9 +73,7 @@ namespace Helper
 
         public void LoadFromString(string xmlstr)
         {
-            var sr = new StringReader(xmlstr);
-            var serializer = new XmlSerializer(typeof(List<MatchEntry>));
-            _matchList = (List<MatchEntry>)serializer.Deserialize(sr);
+            _matchList = Serializer.DeserializeFromXml<List<MatchEntry>>(xmlstr);
         }
 
         private bool DateEqual(DateTime dt1, DateTime dt2)
