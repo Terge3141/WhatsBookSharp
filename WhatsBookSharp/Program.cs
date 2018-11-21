@@ -44,7 +44,6 @@ namespace WhatsBookSharp
             // use a config file, for debugging purpose
             if (args[0] == "CONFIGFILE")
             {
-                File.WriteAllText("/tmp/sample.xml", Serializer.SerializeToXml<Config>(config));*/
                 config = Serializer.DeserializeFromXml<Config>(File.ReadAllText(args[1]));
             }
             else
