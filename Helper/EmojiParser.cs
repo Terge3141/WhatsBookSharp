@@ -111,7 +111,7 @@ namespace Helper
                         if (Debug != null)
                         {
                             int dbgVal = BitConverter.ToInt32(quad, 0);
-                            Debug.WriteLine(dbgVal);
+                            Debug.WriteLine($"{dbgVal} {alternative}");
                         }
                         return index + 4;
                     }

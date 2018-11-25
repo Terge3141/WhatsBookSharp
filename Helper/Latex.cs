@@ -32,6 +32,7 @@ namespace Helper
             str = str.Replace(">", "$>$");
             str = str.Replace("’", "'");
             str = str.Replace("…", "...");
+            str = str.Replace("°", "${}^\\circ$");
 
             str = str.Replace("ß", "\\ss{}");
             str = str.Replace("Ä", "\\\"A");
